@@ -24,6 +24,7 @@ public class RaycastHandler
         if(camera==null)
         {
             Debug.LogError("CANNOT RAYCAST WITHOUT CAMERA");
+            return;
         }
         else
         {

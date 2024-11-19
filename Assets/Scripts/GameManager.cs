@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private ARPlaneManager planeManager;
     [SerializeField] private InputManager inputManager;
 
-    [Header("Raycast Settings")]
+    [Header("Raycast requirements")]
     [SerializeField] private Camera raycastCamera;
     [SerializeField] private LayerMask raycastFilter;
 
