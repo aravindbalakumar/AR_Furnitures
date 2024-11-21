@@ -6,9 +6,10 @@ using UnityEngine.Events;
 public class Player : MonoBehaviour
 {
     Furniture selectedFurnitureInstance;
-    Furn_Instance selectedFurnData = null;
+    FurnitureData selectedFurnData = null;
 
     CurrentMode currentMode=CurrentMode.none;
+
     public UnityEvent<CurrentMode> OnCurrentModeUpdated;
 
     private void OnEnable() { GameManager.Instance.OnHit.AddListener(OnSelected); }
@@ -45,7 +46,7 @@ public class Player : MonoBehaviour
                 }
                 else if(currentMode == CurrentMode.place)
                 {
-                    selectedFurnitureInstance= GameObject.Instantiate<Furniture>( Resources.Load<Furniture>("/Furnitures/"+selectedFurnData.Furn_ID));
+                    selectedFurnitureInstance= GameObject.Instantiate<Furniture>( Resources.Load<Furniture>("/Furnitures/"+selectedFurnData.Furniture_ID));
                     selectedFurnitureInstance.Select();
                     selectedFurnitureInstance.transform.position=hitObject.transform.position;
                     UpdateCurrentMode(CurrentMode.move);

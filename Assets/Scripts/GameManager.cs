@@ -3,6 +3,7 @@ using System;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.XR.ARFoundation;
+using Newtonsoft.Json;
 
 public class GameManager : MonoBehaviour
 {
@@ -15,10 +16,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Camera raycastCamera;
     [SerializeField] private LayerMask raycastFilter;
 
-
+    
     private RaycastHandler raycastHandler = null;
+    [SerializeField] TotalFurnitureData totalData;
+    [SerializeField] string dataPath;
     [HideInInspector]public bool isInitialized=false;
-
+    
 
     public static GameManager Instance
     {
@@ -51,6 +54,12 @@ public class GameManager : MonoBehaviour
         else
         {
             Destroy(this.gameObject); // destroy any other duplicates
+        }
+        dataPath = Application.streamingAssetsPath + System.IO.Path.DirectorySeparatorChar + "Data.json";
+        if (System.IO.File.Exists(dataPath))
+        {
+            totalData = JsonConvert.DeserializeObject<TotalFurnitureData>(System.IO.File.ReadAllText(dataPath));
+            
         }
     }
     private void OnEnable() => planeManager.planesChanged += OnARPlanesChanged;

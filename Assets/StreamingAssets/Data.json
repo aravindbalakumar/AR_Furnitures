@@ -1,0 +1,94 @@
+﻿{
+    "Furnitures": [
+        {
+            "Furniture_Name": "Sofa",
+            "Furniture_ID": "Furn_001",
+            "Category": 4
+        },
+        {
+            "Furniture_Name": "Brown L Sofa ",
+            "Furniture_ID": "Furn_002",
+            "Category": 4
+        },
+        {
+            "Furniture_Name": "Cofee Table",
+            "Furniture_ID": "Furn_003",
+            "Category": 2
+        },
+        {
+            "Furniture_Name": "Brown Single Sofa",
+            "Furniture_ID": "Furn_004",
+            "Category": 4
+        },
+        {
+            "Furniture_Name": "Standing Lamp",
+            "Furniture_ID": "Furn_005",
+            "Category": 5
+        },
+        {
+            "Furniture_Name": "Glass table",
+            "Furniture_ID": "Furn_006",
+            "Category": 2
+        },
+        {
+            "Furniture_Name": "Mordern chair",
+            "Furniture_ID": "Furn_007",
+            "Category": 0
+        },
+        {
+            "Furniture_Name": "Single chair",
+            "Furniture_ID": "Furn_008",
+            "Category": 0
+        },
+        {
+            "Furniture_Name": "Chairpillow",
+            "Furniture_ID": "Furn_009",
+            "Category": 0
+        },
+        {
+            "Furniture_Name": "Rackwood1",
+            "Furniture_ID": "Furn_010",
+            "Category": 1
+        },
+        {
+            "Furniture_Name": "Racksteel",
+            "Furniture_ID": "Furn_011",
+            "Category": 1
+        },
+        {
+            "Furniture_Name": "Rackwood2",
+            "Furniture_ID": "Furn_012",
+            "Category": 1
+        },
+        {
+            "Furniture_Name": "Steel Table",
+            "Furniture_ID": "Furn_013",
+            "Category": 2
+        },
+        {
+            "Furniture_Name": "Plant",
+            "Furniture_ID": "Furn_014",
+            "Category": 5
+        },
+        {
+            "Furniture_Name": "TV",
+            "Furniture_ID": "Furn_015",
+            "Category": 5
+        },
+        {
+            "Furniture_Name": "Bed1",
+            "Furniture_ID": "Furn_016",
+            "Category": 3
+        },
+        {
+            "Furniture_Name": "Bed2",
+            "Furniture_ID": "Furn_017",
+            "Category": 3
+        },
+        {
+            "Furniture_Name": "Bed3",
+            "Furniture_ID": "Furn_018",
+            "Category": 3
+        }
+    ]
+}
