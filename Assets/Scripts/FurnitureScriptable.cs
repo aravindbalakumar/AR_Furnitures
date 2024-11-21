@@ -18,7 +18,5 @@ public class Furn_Data : ScriptableObject
 }
 
 
-public enum Category_Enum
-{
-    Chairs,Racks,Tables,Bed,Sofa,Others
-}
+public enum Category_Enum { Chairs, Racks, Tables, Bed, Sofa, Others }
+public enum CurrentMode { place, rotate, move,none }

@@ -1,5 +1,7 @@
 
+using System;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.XR.ARFoundation;
 
 public class GameManager : MonoBehaviour
@@ -7,6 +9,7 @@ public class GameManager : MonoBehaviour
     [Header("References")]
     [SerializeField] private ARPlaneManager planeManager;
     [SerializeField] private InputManager inputManager;
+    [SerializeField] private Player player;
 
     [Header("Raycast requirements")]
     [SerializeField] private Camera raycastCamera;
@@ -24,8 +27,16 @@ public class GameManager : MonoBehaviour
             return _instance;
         }
     }
-
     private static GameManager _instance;
+    public UnityEvent<RaycastHit> OnHit
+    {
+        get { return raycastHandler.OnHit; }
+    }
+    public UnityEvent<CurrentMode> OnCurrentMode
+    {
+        get { return player.OnCurrentModeUpdated; }
+    }
+
 
     /// <summary>
     /// Awake function called when initialized
@@ -58,6 +69,7 @@ public class GameManager : MonoBehaviour
         }
 
     }
+    
 
     private void OnDisable() => planeManager.planesChanged -= OnARPlanesChanged;
 

@@ -9,7 +9,7 @@ public class RaycastHandler
     RaycastHit hitInfo;
     Camera camera;
     LayerMask layersToHit;
-    public UnityEvent<RaycastHit> OnRaycastHit;
+    public UnityEvent<RaycastHit> OnHit;
     float maxDistance = 0;
 
     public RaycastHandler(Camera camera, LayerMask layersToHit, float maxDistance = float.PositiveInfinity)
@@ -31,7 +31,7 @@ public class RaycastHandler
             ray = camera.ScreenPointToRay(touchPosition);
             if(Physics.Raycast(ray.origin,ray.direction,out hitInfo,maxDistance, layersToHit,QueryTriggerInteraction.UseGlobal))
             {
-                OnRaycastHit?.Invoke(hitInfo);
+                OnHit?.Invoke(hitInfo);
             }
 
         }
