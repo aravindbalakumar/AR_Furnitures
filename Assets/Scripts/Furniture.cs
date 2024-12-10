@@ -1,16 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Furniture : MonoBehaviour
 {
+    public bool isRotating=false;
     public void OnEnable()
     {
-        
+
     }
     public void OnDisable()
     {
-        
+
     }
     public void Select()
     {
@@ -20,4 +19,6 @@ public class Furniture : MonoBehaviour
     {
 
     }
+
+    
 }

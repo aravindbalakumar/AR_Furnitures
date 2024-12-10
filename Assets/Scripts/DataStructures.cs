@@ -15,5 +15,5 @@ public class TotalFurnitureData
 }
 
 [System.Serializable]
-public enum Category { Chairs, Racks, Tables, Bed, Sofa, Others }
+public enum Category { Chair, Shelf, Table, Bed, Sofa, Other }
 public enum CurrentMode { place, rotate, move,none }

@@ -7,6 +7,8 @@ public class InputManager : MonoBehaviour
     Touch tch;
     Vector2 prev_tch_pos;
     public UnityEvent<Vector2> OnTouch;
+    public UnityEvent<int> OnTouch_X_Direction;
+    public UnityEvent<int> OnTouch_Y_Direction;
 
     private void Update()
     {
@@ -28,6 +30,15 @@ public class InputManager : MonoBehaviour
                     case TouchPhase.Moved:
                         if(prev_tch_pos!=tch.position)
                         {
+                            if(tch.position.x > prev_tch_pos.x)
+                            {
+                                OnTouch_X_Direction?.Invoke(1);
+                            }
+                            else if (tch.position.x < prev_tch_pos.x)
+                            {
+                                OnTouch_X_Direction?.Invoke(-1);
+                            }
+
                             prev_tch_pos = tch.position;
                             OnTouch?.Invoke(tch.position);
                         }

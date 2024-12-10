@@ -1,4 +1,5 @@
 
+using System;
 using UnityEngine;
 
 using UnityEngine.Events;
@@ -9,7 +10,7 @@ public class RaycastHandler
     RaycastHit hitInfo;
     Camera camera;
     LayerMask layersToHit;
-    public UnityEvent<RaycastHit> OnHit;
+    public Action<RaycastHit> OnHit;
     float maxDistance = 0;
 
     public RaycastHandler(Camera camera, LayerMask layersToHit, float maxDistance = float.PositiveInfinity)
