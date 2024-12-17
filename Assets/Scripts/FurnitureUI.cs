@@ -22,7 +22,7 @@ public class FurnitureUI : MonoBehaviour
 
     }
 
-    private void OnClick()=>uiManager.OnSelectedFurniture(furnID);
+    private void OnClick()=>uiManager.SelectFurnitureID(furnID,furnName.text,furnSprite);
 
     private void OnEnable()
     {

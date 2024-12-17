@@ -2,20 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
-    Furniture selectedFurnitureInstance;
-    [HideInInspector] public string furnitureID = null;
+    
     CurrentMode currentMode=CurrentMode.none;
     [Header("Input")]
     [SerializeField] private InputManager inputManager;
-    float rotatespeed = 50;
+    float rotatespeed = 250;
     public UnityEvent<CurrentMode> OnCurrentInputMode;
     [Header("Raycast requirements")]
     [SerializeField] private LayerMask raycastFilter;
     private RaycastHandler raycastHandler = null;
-    
+
+
+    Furniture selectedFurnitureInstance;
+    [HideInInspector] public string furnitureID = null;
+    private Vector3 selecterFurniturePosition;
+    private Quaternion selecterFurnitureRotation;
+
     public void Init()
     {
 
@@ -23,59 +29,75 @@ public class Player : MonoBehaviour
         {
             raycastHandler = new RaycastHandler(GameManager.Instance.ARCamera, raycastFilter); // first time creating a object for raycast handler
         }
-        raycastHandler.OnHit+=OnMoveOrPlace;
+        raycastHandler.OnHit+=OnSelectOrMoveOrPlace;
     }
     public void Deinit()
     {
-        raycastHandler.OnHit-=OnMoveOrPlace;
+        raycastHandler.OnHit-= OnSelectOrMoveOrPlace;
     }
-
-    private void OnMoveOrPlace(RaycastHit hitObject)
+    public void SavePreviousState()
     {
+        selecterFurniturePosition = selectedFurnitureInstance.transform.position;
+        selecterFurnitureRotation = selectedFurnitureInstance.transform.rotation;
+    }
+    private void OnSelectOrMoveOrPlace(RaycastHit hitObject)
+    {
+        if(hitObject.transform.gameObject == null)
+        {
+            return;
+        }
+
         if (hitObject.transform.gameObject.layer == LayerMask.NameToLayer("Furniture"))
         {
             Furniture hitFurnitureObject = hitObject.transform.GetComponent<Furniture>();
-            if (hitFurnitureObject != null)
+            if (hitFurnitureObject == null)
             {
-                if (selectedFurnitureInstance != null)
-                {
+                return;
+            }
+            if(selectedFurnitureInstance==null)
+            {
+                selectedFurnitureInstance = hitFurnitureObject;
+                selectedFurnitureInstance.Select();
+                GameManager.Instance.UIManager.EnableControl(true);
 
-                    if (selectedFurnitureInstance.gameObject == hitFurnitureObject.gameObject)
-                    {
-                        selectedFurnitureInstance.Deselect();
-                        GameManager.Instance.UIManager.OnControClose();
-                    }
-                }
-                else
-                {
-                    selectedFurnitureInstance = hitFurnitureObject;
-                    selectedFurnitureInstance.Select();
-                    GameManager.Instance.UIManager.EnableControl(true);
-                }
+            }
+            else if(selectedFurnitureInstance.gameObject!= hitFurnitureObject.gameObject)
+            {
+                selectedFurnitureInstance.Deselect();
+                selectedFurnitureInstance = hitFurnitureObject;
+                selectedFurnitureInstance.Select();
+                GameManager.Instance.UIManager.EnableControl(true);
             }
         }
         else if (hitObject.transform.gameObject.layer == LayerMask.NameToLayer("ARPlane"))
         {
-            if (selectedFurnitureInstance != null)
+            switch(currentMode)
             {
-                if (currentMode == CurrentMode.move)
-                {
-                    selectedFurnitureInstance.transform.position = hitObject.transform.position;
-                }
+                case CurrentMode.place:
+                    if(furnitureID.isValidString())
+                    {
+                        selectedFurnitureInstance = Instantiate<Furniture>(Resources.Load<Furniture>("Furn/Prefabs/" + furnitureID));
+                        selectedFurnitureInstance.Select();
+                        selectedFurnitureInstance.transform.position = hitObject.point;
+                        GameManager.Instance.UIManager.EnableControl(true);
+                        furnitureID = null;
+                    }
+                    break;
+                case CurrentMode.move:
+                    
+                    if(selectedFurnitureInstance!=null)
+                    {
+                       
+                        selectedFurnitureInstance.transform.position = hitObject.point;
+                    }
+                    break;
+                case CurrentMode.rotate:
+                    if (selectedFurnitureInstance != null)
+                    {
+                    }
+                    break;
             }
-
-            if (selectedFurnitureInstance == null)
-            {
-                if (currentMode == CurrentMode.place)
-                {
-                    selectedFurnitureInstance = Instantiate<Furniture>(Resources.Load<Furniture>("/Furn/Prefabs/" + furnitureID));
-                    selectedFurnitureInstance.Select();
-                    selectedFurnitureInstance.transform.position = hitObject.transform.position;
-                    GameManager.Instance.UIManager.EnableControl(true);
-                    furnitureID = null;
-                }
-            }
-            
+         
         }
     }
 
@@ -90,9 +112,9 @@ public class Player : MonoBehaviour
     public void UpdateCurrentMode(CurrentMode currentMode)
     {
         this.currentMode = currentMode;
-        if(this.currentMode== CurrentMode.move || this.currentMode==CurrentMode.place)
+        if (this.currentMode== CurrentMode.move || this.currentMode==CurrentMode.place)
         {
-
+            
             inputManager.OnTouch.AddListener(raycastHandler.RaycastFromScreen);
             inputManager.OnTouch_X_Direction.RemoveListener(RotateObject);
         }
@@ -101,11 +123,34 @@ public class Player : MonoBehaviour
             inputManager.OnTouch.RemoveListener(raycastHandler.RaycastFromScreen);
             inputManager.OnTouch_X_Direction.AddListener(RotateObject);
         }
-        else
+        else if(this.currentMode==CurrentMode.none)
         {
-            inputManager.OnTouch.RemoveListener(raycastHandler.RaycastFromScreen);
+            inputManager.OnTouch.AddListener(raycastHandler.RaycastFromScreen);
             inputManager.OnTouch_X_Direction.RemoveListener(RotateObject);
         }
     }
 
+    public void OnEndLevel(int stageendID)
+    {
+        if(stageendID==0)
+        {
+            SceneManager.LoadScene(0);
+        }
+    }
+
+    public void EditCancel()
+    {
+        selectedFurnitureInstance.transform.position = selecterFurniturePosition;
+        selectedFurnitureInstance.transform.rotation = selecterFurnitureRotation;
+    }
+    public void DeleteFurniture()
+    {
+        Destroy(selectedFurnitureInstance.gameObject);
+        ResetSelectedFuriture();
+        UpdateCurrentMode(CurrentMode.none);
+    }
+    public void ResetSelectedFuriture()
+    {
+        selectedFurnitureInstance = null;
+    }
 }

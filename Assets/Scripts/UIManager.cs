@@ -1,22 +1,32 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
-    [SerializeField] GameObject sideMenu;
+
     [SerializeField] Sprite[] categorySprites;
+    [SerializeField] GameObject sideMenu;
     [SerializeField] GameObject backButton;
+
+    [SerializeField] GameObject sel_furn_UI_panel;
+    [SerializeField] TextMeshProUGUI sel_furn_UI_name;
+    [SerializeField] Image sel_furn_UI_image;
+    [SerializeField] TextMeshProUGUI title;
+    [Header("Prefabs and parents")]
     [SerializeField] Transform categoryContentParent;
     [SerializeField] CategoryUI categoryUIPrefab;
     [SerializeField] Transform furnitureContentParent;
     [SerializeField] FurnitureUI furnitureUIPrefab;
+    [Header("Single Furn edit Control")]
+    [SerializeField] GameObject furn_Edit_Option_Menu;
+    [SerializeField] GameObject furn_Edit_Control_Menu;
+    [SerializeField] GameObject furn_Edit_Confirm_menu;
     Dictionary<Category, List<FurnitureUI>> categorizedFurnitures;
     Category? selectedCatergory = null;
-    [SerializeField] GameObject controlPanel;
-    [SerializeField] GameObject controlMenu;
-    [SerializeField] GameObject OkayButton;
 
     public void Initialize()
     {
@@ -45,7 +55,7 @@ public class UIManager : MonoBehaviour
         furnitureContentParent.gameObject.SetActive(true);
         backButton.SetActive(true);
         categoryContentParent.gameObject.SetActive(false);
-
+        title.text = category.ToString();
         if (selectedCatergory.HasValue)
         {
             categorizedFurnitures[selectedCatergory.Value].ForEach(x => x.gameObject.SetActive(false));
@@ -60,15 +70,26 @@ public class UIManager : MonoBehaviour
 
     }
 
-    public void OnSelectedFurniture(string furnID)
+    public void SelectFurnitureID(string furnID, string furnName, Sprite furnSprite)
     {
         GameManager.Instance.Player.furnitureID = furnID;
         GameManager.Instance.Player.UpdateCurrentMode(CurrentMode.place);
+        sel_furn_UI_name.text = furnName;
+        sel_furn_UI_image.sprite = furnSprite;
+        sel_furn_UI_image.preserveAspect = true;
+        sel_furn_UI_panel.gameObject.SetActive(true);
+    }
+    public void DeselectFurnitureID()
+    {
+        sel_furn_UI_panel.gameObject.SetActive(false);
+        GameManager.Instance.Player.furnitureID = null;
+        GameManager.Instance.Player.UpdateCurrentMode(CurrentMode.none);
     }
     public void Back()
     {
         furnitureContentParent.gameObject.SetActive(false);
         backButton.SetActive(false);
+        title.text = "Select a Category";
         categoryContentParent.gameObject.SetActive(true);
         if (selectedCatergory.HasValue)
         {
@@ -77,51 +98,78 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void EnableControl(bool resetMenu=false)
+
+    #region single furniture edit control
+    public void EnableControl(bool resetMenu = false)
     {
         if (resetMenu == true)
         {
-            OnControClose();
+            ResetMenu();
         }
         sideMenu?.SetActive(false);
-        controlPanel.SetActive(true);
-        controlMenu.SetActive(true);
+        furn_Edit_Option_Menu.SetActive(true);
+        furn_Edit_Control_Menu.SetActive(true);
     }
 
     public void OnMoveClick()
     {
         GameManager.Instance.Player.UpdateCurrentMode(CurrentMode.move);
-        controlMenu.SetActive(false);
-        OkayButton.gameObject.SetActive(true);
+        GameManager.Instance.Player.SavePreviousState();
+        furn_Edit_Control_Menu.SetActive(false);
+        furn_Edit_Confirm_menu.gameObject.SetActive(true);
     }
     public void OnRotateClick()
     {
         GameManager.Instance.Player.UpdateCurrentMode(CurrentMode.rotate);
-        controlMenu.SetActive(false);
-        OkayButton.gameObject.SetActive(true);
-    }
-    public void OnEditDone()
-    {
-        GameManager.Instance.Player.UpdateCurrentMode(CurrentMode.none);
-        OkayButton.gameObject.SetActive(false);
-        controlMenu.SetActive(true);
+        GameManager.Instance.Player.SavePreviousState();
+        furn_Edit_Control_Menu.SetActive(false);
+        furn_Edit_Confirm_menu.gameObject.SetActive(true);
     }
 
-    public void OnControClose()
+    public void OnTransformUpdateDone()
     {
         GameManager.Instance.Player.UpdateCurrentMode(CurrentMode.none);
-        OkayButton.gameObject.SetActive(false);
-        sideMenu.SetActive(true);
-        controlPanel.SetActive(false);
-        controlMenu.SetActive(false);
+        furn_Edit_Confirm_menu.gameObject.SetActive(false);
+        furn_Edit_Control_Menu.SetActive(true);
     }
+
+    public void OnTransformUpdateCancel()
+    {
+        GameManager.Instance.Player.UpdateCurrentMode(CurrentMode.none);
+        furn_Edit_Confirm_menu.gameObject.SetActive(false);
+        furn_Edit_Control_Menu.SetActive(true);
+        GameManager.Instance.Player.EditCancel();
+    }
+
+    public void CloseControl()
+    {
+        GameManager.Instance.Player.ResetSelectedFuriture();
+        ResetMenu();
+    }
+    private void ResetMenu()
+    {
+        furn_Edit_Confirm_menu.gameObject.SetActive(false);
+        sideMenu.SetActive(true);
+        sel_furn_UI_panel.SetActive(false);
+        furn_Edit_Option_Menu.SetActive(false);
+        furn_Edit_Control_Menu.SetActive(false);
+    }
+
+
+    public void DeleteFurniture()
+    {
+        ResetMenu();
+        GameManager.Instance.Player.DeleteFurniture();
+    }
+    #endregion
+
     private void Spawnfurnitures()
     {
         categorizedFurnitures = new Dictionary<Category, List<FurnitureUI>>();
         foreach (var furnData in GameManager.Instance.data.Furnitures)
         {
             FurnitureUI furnUIInstance = Instantiate(furnitureUIPrefab, furnitureContentParent);
-            furnUIInstance.Initialize(furnData.Furniture_Name, furnData.Furniture_ID,this);
+            furnUIInstance.Initialize(furnData.Furniture_Name, furnData.Furniture_ID, this);
             if (categorizedFurnitures.ContainsKey(furnData.Category))
             {
 
@@ -135,4 +183,5 @@ public class UIManager : MonoBehaviour
 
         }
     }
+
 }

@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private ARPlaneManager planeManager;
+    [SerializeField] public OnScreenDebug onscreenDebug;
     [SerializeField] public Camera ARCamera;
     [SerializeField] private Player player;
     public Player Player
@@ -71,12 +72,8 @@ public class GameManager : MonoBehaviour
 
     private void LoadData()
     {
-        dataPath = Application.streamingAssetsPath + System.IO.Path.DirectorySeparatorChar + "Data.json";
-        if (System.IO.File.Exists(dataPath))
-        {
-            totalData = JsonConvert.DeserializeObject<TotalFurnitureData>(System.IO.File.ReadAllText(dataPath));
-
-        }
+        totalData = JsonConvert.DeserializeObject<TotalFurnitureData>(Resources.Load<TextAsset>("Data").text);
+        
     }
     
     private void InitializeComponents()

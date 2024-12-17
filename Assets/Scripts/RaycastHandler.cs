@@ -29,10 +29,13 @@ public class RaycastHandler
         }
         else
         {
-            ray = camera.ScreenPointToRay(touchPosition);
-            if(Physics.Raycast(ray.origin,ray.direction,out hitInfo,maxDistance, layersToHit,QueryTriggerInteraction.UseGlobal))
+            if (!Extensions.IsPointerOverUI(touchPosition))
             {
-                OnHit?.Invoke(hitInfo);
+                ray = camera.ScreenPointToRay(touchPosition);
+                if (Physics.Raycast(ray.origin, ray.direction, out hitInfo, maxDistance, layersToHit, QueryTriggerInteraction.UseGlobal))
+                {
+                    OnHit?.Invoke(hitInfo);
+                }
             }
 
         }
