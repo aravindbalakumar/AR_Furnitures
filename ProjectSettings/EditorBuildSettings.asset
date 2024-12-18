@@ -13,6 +13,8 @@ EditorBuildSettings:
       type: 2}
     UnityEditor.XR.ARKit.ARKitSettings: {fileID: 11400000, guid: c7c3ffefd016b48748ba6538415b464d,
       type: 2}
+    com.unity.input.settings: {fileID: 11400000, guid: 7289f7b28fdd34abda37b5c2280625f7,
+      type: 2}
     com.unity.xr.arfoundation.simulation_settings: {fileID: 11400000, guid: 532b5bb709d204d7a849b359becd56fb,
       type: 2}
     com.unity.xr.magicleap.magic_leap_settings: {fileID: 11400000, guid: 838d092b6898348b5b6be1b908a7cbe1,

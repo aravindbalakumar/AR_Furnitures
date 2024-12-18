@@ -13,7 +13,7 @@ public static class Extensions
     {
         var eventSystem = EventSystem.current;
         PointerEventData eventData = new PointerEventData(eventSystem);
-        eventData.position = Input.mousePosition;
+        eventData.position = ScreenPosition;
         List<RaycastResult> results = new List<RaycastResult>();
         eventSystem.RaycastAll(eventData, results);
         return results.Count > 0;

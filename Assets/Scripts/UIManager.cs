@@ -27,7 +27,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject furn_Edit_Confirm_menu;
     Dictionary<Category, List<FurnitureUI>> categorizedFurnitures;
     Category? selectedCatergory = null;
-
+    /// <summary>
+    /// Function that spawnscategory and furnitures
+    /// </summary>
     public void Initialize()
     {
         CategoryUI chairCat = Instantiate(categoryUIPrefab, categoryContentParent);
@@ -47,9 +49,12 @@ public class UIManager : MonoBehaviour
 
         CategoryUI otherCat = Instantiate(categoryUIPrefab, categoryContentParent);
         otherCat.InitCategory(Category.Other, categorySprites[5], this);
-        Spawnfurnitures();
+        SpawnfurnituresUI();
     }
-
+    /// <summary>
+    /// Filter category based furnitures
+    /// </summary>
+    /// <param name="category"></param>
     public void FilterCategory(Category category)
     {
         furnitureContentParent.gameObject.SetActive(true);
@@ -70,6 +75,12 @@ public class UIManager : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Selected furniture
+    /// </summary>
+    /// <param name="furnID">used for identifying the furniture</param>
+    /// <param name="furnName"> the furniture name to display</param>
+    /// <param name="furnSprite">the furniture sprite to display</param>
     public void SelectFurnitureID(string furnID, string furnName, Sprite furnSprite)
     {
         GameManager.Instance.Player.furnitureID = furnID;
@@ -79,12 +90,18 @@ public class UIManager : MonoBehaviour
         sel_furn_UI_image.preserveAspect = true;
         sel_furn_UI_panel.gameObject.SetActive(true);
     }
+    /// <summary>
+    /// Deselct furniture
+    /// </summary>
     public void DeselectFurnitureID()
     {
         sel_furn_UI_panel.gameObject.SetActive(false);
         GameManager.Instance.Player.furnitureID = null;
         GameManager.Instance.Player.UpdateCurrentMode(CurrentMode.none);
     }
+    /// <summary>
+    /// Back button call back in side panel
+    /// </summary>
     public void Back()
     {
         furnitureContentParent.gameObject.SetActive(false);
@@ -100,6 +117,10 @@ public class UIManager : MonoBehaviour
 
 
     #region single furniture edit control
+    /// <summary>
+    /// Enable the control panel
+    /// </summary>
+    /// <param name="resetMenu">should reset</param>
     public void EnableControl(bool resetMenu = false)
     {
         if (resetMenu == true)
@@ -110,7 +131,9 @@ public class UIManager : MonoBehaviour
         furn_Edit_Option_Menu.SetActive(true);
         furn_Edit_Control_Menu.SetActive(true);
     }
-
+    /// <summary>
+    /// Called when move button is clicked, will enter edit mode
+    /// </summary>
     public void OnMoveClick()
     {
         GameManager.Instance.Player.UpdateCurrentMode(CurrentMode.move);
@@ -118,6 +141,10 @@ public class UIManager : MonoBehaviour
         furn_Edit_Control_Menu.SetActive(false);
         furn_Edit_Confirm_menu.gameObject.SetActive(true);
     }
+
+    /// <summary>
+    /// Called when rotate button is clicked, will enter Edit mode
+    /// </summary>
     public void OnRotateClick()
     {
         GameManager.Instance.Player.UpdateCurrentMode(CurrentMode.rotate);
@@ -126,6 +153,9 @@ public class UIManager : MonoBehaviour
         furn_Edit_Confirm_menu.gameObject.SetActive(true);
     }
 
+    /// <summary>
+    /// Called when transform edit is done
+    /// </summary>
     public void OnTransformUpdateDone()
     {
         GameManager.Instance.Player.UpdateCurrentMode(CurrentMode.none);
@@ -133,6 +163,9 @@ public class UIManager : MonoBehaviour
         furn_Edit_Control_Menu.SetActive(true);
     }
 
+    /// <summary>
+    /// Called whhen transform edit is cancelled
+    /// </summary>
     public void OnTransformUpdateCancel()
     {
         GameManager.Instance.Player.UpdateCurrentMode(CurrentMode.none);
@@ -140,12 +173,17 @@ public class UIManager : MonoBehaviour
         furn_Edit_Control_Menu.SetActive(true);
         GameManager.Instance.Player.EditCancel();
     }
-
+    /// <summary>
+    /// Closes the control menu
+    /// </summary>
     public void CloseControl()
     {
         GameManager.Instance.Player.ResetSelectedFuriture();
         ResetMenu();
     }
+    /// <summary>
+    /// Resets the menu
+    /// </summary>
     private void ResetMenu()
     {
         furn_Edit_Confirm_menu.gameObject.SetActive(false);
@@ -155,7 +193,9 @@ public class UIManager : MonoBehaviour
         furn_Edit_Control_Menu.SetActive(false);
     }
 
-
+    /// <summary>
+    /// Delet the seelected furniture
+    /// </summary>
     public void DeleteFurniture()
     {
         ResetMenu();
@@ -163,7 +203,10 @@ public class UIManager : MonoBehaviour
     }
     #endregion
 
-    private void Spawnfurnitures()
+    /// <summary>
+    /// Spawns all the furniture UI
+    /// </summary>
+    private void SpawnfurnituresUI()
     {
         categorizedFurnitures = new Dictionary<Category, List<FurnitureUI>>();
         foreach (var furnData in GameManager.Instance.data.Furnitures)

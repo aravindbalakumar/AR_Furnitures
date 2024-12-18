@@ -11,6 +11,7 @@ Library: /Users/abk/Documents/Projects/AR_Furnitures/Temp/BurstOutput/tempburstl
 --float-mode=Fast
 --generate-link-xml=Temp/burst.link.xml
 --temp-folder=/Users/abk/Documents/Projects/AR_Furnitures/Temp/Burst
+--debug=Full
 --key-folder=/Applications/Unity/Hub/Editor/2022.3.47f1/PlaybackEngines/AndroidPlayer
 --decode-folder=/Users/abk/Documents/Projects/AR_Furnitures/Library/Burst
 --output=/Users/abk/Documents/Projects/AR_Furnitures/Temp/BurstOutput/tempburstlibs/armeabi-v7a/lib_burst_generated
@@ -28,6 +29,7 @@ Library: /Users/abk/Documents/Projects/AR_Furnitures/Temp/BurstOutput/tempburstl
 --target-framework=NetFramework
 --generate-link-xml=Temp/burst.link.xml
 --temp-folder=/Users/abk/Documents/Projects/AR_Furnitures/Temp/Burst
+--debug=Full
 --key-folder=/Applications/Unity/Hub/Editor/2022.3.47f1/PlaybackEngines/AndroidPlayer
 --decode-folder=/Users/abk/Documents/Projects/AR_Furnitures/Library/Burst
 --output=/Users/abk/Documents/Projects/AR_Furnitures/Temp/BurstOutput/tempburstlibs/armeabi-v7a/lib_burst_generated
